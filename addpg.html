@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>List Your PG</title>
+<style>
+body{
+font-family:Arial;
+background:#FFF9E6;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+form{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+input{
+display:block;
+margin:10px 0;
+padding:10px;
+width:250px;
+}
+
+button{
+padding:10px 20px;
+background:#FFC107;
+border:none;
+cursor:pointer;
+} </style>
+
+</head>
+
+<body>
+
+<form id="pgForm">
+<h2>List Your PG</h2>
+
+<input type="text" placeholder="PG Name" id="name" required>
+<input type="text" placeholder="City" id="city" required>
+<input type="text" placeholder="Country" id="country" required>
+<input type="number" placeholder="Price" id="price" required>
+<input type="number" placeholder="Latitude" id="lat" required>
+<input type="number" placeholder="Longitude" id="lng" required>
+
+<button type="submit">Submit PG</button>
+
+</form>
+
+<script>
+
+document.getElementById("pgForm").addEventListener("submit",async function(e){
+
+e.preventDefault();
+
+const data={
+name:document.getElementById("name").value,
+city:document.getElementById("city").value,
+country:document.getElementById("country").value,
+price:Number(document.getElementById("price").value),
+lat:Number(document.getElementById("lat").value),
+lng:Number(document.getElementById("lng").value)
+};
+
+await fetch("http://localhost:3000/addpg",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(data)
+});
+
+alert("PG Added Successfully!");
+
+});
+
+</script>
+
+</body>
+</html>

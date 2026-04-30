@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>StayAtlas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:#FFF9E6;
+    color:#3A2E00;
+}
+
+.listpg-btn{
+    margin-top:10px;
+    padding:12px 25px;
+    background:#FFB300;
+    border:none;
+    color:#3A2E00;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.listpg-btn:hover{
+    transform:scale(1.05);
+}
+
+/* HERO */
+.hero{
+    height:90vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    background:
+        linear-gradient(rgba(255,230,150,0.85), rgba(255,245,200,0.85)),
+        url('https://images.unsplash.com/photo-1505761671935-60b3a7427bad?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+}
+
+.hero h1{
+    font-size:70px;
+    margin:0;
+    text-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.playstore-btn{
+    margin-top:20px;
+    padding:12px 25px;
+    background:#FFC107;
+    border:none;
+    color:#3A2E00;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.playstore-btn:hover{
+    transform:scale(1.05);
+}
+
+/* TAGLINE */
+.tagline{
+    padding:80px 20px;
+    text-align:center;
+    background:#FFF3C4;
+}
+
+.tagline h2{
+    font-size:45px;
+    font-weight:bold;
+}
+
+/* MAIN */
+header{
+    background:#FFE082;
+    padding:15px;
+    text-align:center;
+    font-size:28px;
+    border-bottom:2px solid #FFC107;
+}
+
+.container{
+    display:flex;
+}
+
+.sidebar{
+    width:40%;
+    height:90vh;
+    overflow-y:auto;
+    background:#FFF8DC;
+    padding:20px;
+}
+
+.country{
+    margin-top:20px;
+    padding:14px 18px;
+    cursor:pointer;
+    font-size:18px;
+    font-weight:bold;
+    border-radius:12px;
+    transition:0.3s ease;
+    background:#FFF4CC;
+    border:1px solid #FFD54F;
+    backdrop-filter:blur(6px);
+}
+
+.country:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 30px rgba(0,0,0,0.2);
+}
+
+.country.active{
+    background:#FFC107;
+    box-shadow:0 15px 30px rgba(255,193,7,0.4);
+}
+
+.city-container{
+    margin-left:15px;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.5s ease;
+}
+
+.city-title{
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.pg-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-top:10px;
+}
+
+.pg-card{
+    background:white;
+    color:black;
+    padding:12px;
+    border-radius:10px;
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.pg-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 20px rgba(0,0,0,0.3);
+}
+
+.pg-card.highlight{
+    border:2px solid #FFC107;
+}
+
+#map{
+    width:60%;
+    height:90vh;
+    background:#FFF9E6;
+}
+
+/* GALLERY */
+.gallery{
+    background:#FFF8DC;
+    padding:80px 40px;
+    text-align:center;
+}
+
+.gallery h2{
+    font-size:36px;
+    margin-bottom:40px;
+}
+
+.gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+}
+
+.gallery-card{
+    overflow:hidden;
+    border-radius:16px;
+    transition:0.4s ease;
+    border:2px solid #FFD54F;
+    background:#FFFDF5;
+}
+
+.gallery-card img{
+    width:100%;
+    height:250px;
+    object-fit:cover;
+    transition:0.6s ease;
+}
+
+.gallery-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 25px 50px rgba(255,193,7,0.35);
+    border-color:#FFC107;
+}
+
+/* CONTACT */
+.contact{
+    background:linear-gradient(135deg,#FFF8DC,#FFF3C4);
+    padding:80px 20px;
+    text-align:center;
+}
+
+.contact-btn{
+    padding:14px 30px;
+    background:rgba(255,255,255,0.6);
+    border:1px solid rgba(255,193,7,0.4);
+    color:#3A2E00;
+    border-radius:12px;
+    margin:10px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.contact-btn:hover{
+    transform:translateY(-6px);
+    background:#FFC107;
+    box-shadow:0 15px 30px rgba(255,193,7,0.4);
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>StayAtlas</h1>
+    <p>Find Your Perfect PG Worldwide</p>
+    <button class="playstore-btn">Download on Play Store</button>
+</div>
+
+<div class="tagline">
+    <h2>BECAUSE YOU DESERVE BETTER !</h2>
+</div>
+
+<header>Explore 255 PGs Across The World</header>
+
+<div class="container">
+    <div class="sidebar" id="sidebar"></div>
+    <div id="map"></div>
+</div>
+
+<div class="gallery">
+    <h2>Explore Our Premium PG Spaces</h2>
+    <div class="gallery-grid">
+        <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=2070&auto=format&fit=crop">
+        </div>
+        <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=2070&auto=format&fit=crop">
+        </div>
+        <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop">
+        </div>
+        <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2070&auto=format&fit=crop">
+        </div>
+    </div>
+</div>
+
+<div class="contact">
+
+<h2>Let’s Help You Find Your Perfect Stay</h2>
+<button class="listpg-btn" onclick="window.open('addpg.html')">
+🏠 List Your PG
+</button>
+<button class="contact-btn" onclick="window.location.href='mailto:your@email.com'">
+📧 Email Us
+</button>
+<button class="contact-btn" onclick="window.location.href='tel:+919999999999'">
+📞 Call Support
+</button>
+<button class="contact-btn" onclick="window.open('https://instagram.com/yourusername')">
+📸 Instagram
+</button>
+
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+var map=L.map('map').setView([20,0],2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+
+const dataStructure={
+India:{
+Mumbai:[19.07,72.87],
+Delhi:[28.61,77.20],
+Bangalore:[12.97,77.59],
+Hyderabad:[17.38,78.48],
+Chennai:[13.08,80.27],
+Ahmedabad:[23.03,72.58]
+},
+USA:{NewYork:[40.71,-74.00],Chicago:[41.87,-87.62],Houston:[29.76,-95.36],LosAngeles:[34.05,-118.24],Seattle:[47.60,-122.33]},
+UK:{London:[51.50,-0.12],Manchester:[53.48,-2.24],Liverpool:[53.40,-2.99],Leeds:[53.80,-1.54],Birmingham:[52.48,-1.89]},
+Canada:{Toronto:[43.65,-79.38],Vancouver:[49.28,-123.12],Calgary:[51.04,-114.07],Ottawa:[45.42,-75.69],Montreal:[45.50,-73.56]},
+Australia:{Sydney:[-33.86,151.20],Melbourne:[-37.81,144.96],Perth:[-31.95,115.86],Brisbane:[-27.46,153.02],Adelaide:[-34.92,138.60]},
+Germany:{Berlin:[52.52,13.40],Munich:[48.13,11.58],Frankfurt:[50.11,8.68],Hamburg:[53.55,9.99],Cologne:[50.93,6.96]},
+France:{Paris:[48.85,2.35],Lyon:[45.76,4.83],Marseille:[43.29,5.36],Nice:[43.71,7.26],Toulouse:[43.60,1.44]},
+Japan:{Tokyo:[35.67,139.65],Osaka:[34.69,135.50],Kyoto:[35.01,135.76],Nagoya:[35.18,136.90],Yokohama:[35.44,139.63]},
+Brazil:{SaoPaulo:[-23.55,-46.63],Rio:[-22.90,-43.17],Brasilia:[-15.79,-47.88],Salvador:[-12.97,-38.50],Fortaleza:[-3.73,-38.52]},
+SouthAfrica:{Johannesburg:[-26.20,28.04],CapeTown:[-33.92,18.42],Durban:[-29.85,31.02],Pretoria:[-25.74,28.22],PortElizabeth:[-33.96,25.60]}
+};
+
+const namePart1=["Silver","Golden","Emerald","Maple","Crystal","Royal","Urban","Sky","Sunset","Blue","Elite","Grand","Prime","Comfort","Serene","Harmony","Oak","Palm","Pearl","Green","Lotus","Aurora","Metro","Vista"];
+const namePart2=["Heights","Residency","Living","Stay","Homes","Nest","Suites","Habitat","Villa","Haven"];
+const priceOptions=[6000,8000,10000,12000,15000,18000,20000,25000,30000];
+
+function generateUniqueName(){
+return namePart1[Math.floor(Math.random()*namePart1.length)]+" "+
+namePart2[Math.floor(Math.random()*namePart2.length)]+" "+
+Math.floor(Math.random()*100);
+}
+function generatePrice(){
+return priceOptions[Math.floor(Math.random()*priceOptions.length)];
+}
+
+let sidebar=document.getElementById("sidebar");
+
+Object.keys(dataStructure).forEach(country=>{
+let countryDiv=document.createElement("div");
+countryDiv.className="country";
+countryDiv.innerText=country;
+
+let cityContainer=document.createElement("div");
+cityContainer.className="city-container";
+
+countryDiv.onclick=()=>{
+if(cityContainer.style.maxHeight){
+cityContainer.style.maxHeight=null;
+countryDiv.classList.remove("active");
+}else{
+cityContainer.style.maxHeight=cityContainer.scrollHeight+"px";
+countryDiv.classList.add("active");
+}
+};
+
+Object.keys(dataStructure[country]).forEach(city=>{
+let cityTitle=document.createElement("div");
+cityTitle.className="city-title";
+cityTitle.innerText=city;
+
+let grid=document.createElement("div");
+grid.className="pg-grid";
+
+for(let i=0;i<5;i++){
+let pgName=generateUniqueName();
+let price=generatePrice();
+let baseLat=dataStructure[country][city][0];
+let baseLng=dataStructure[country][city][1];
+let lat=baseLat+(Math.random()*0.05-0.025);
+let lng=baseLng+(Math.random()*0.05-0.025);
+
+let marker=L.marker([lat,lng]).addTo(map);
+marker.bindPopup(`<b>${pgName}</b><br>${city}, ${country}<br><b style="color:#FFC107;">₹ ${price} / month</b>`);
+
+let card=document.createElement("div");
+card.className="pg-card";
+card.innerHTML=`<b>${pgName}</b><br>${city}<br><span style="color:#FFC107;font-weight:bold;">₹ ${price} / month</span>`;
+
+card.onclick=()=>{
+document.querySelectorAll(".pg-card").forEach(c=>c.classList.remove("highlight"));
+card.classList.add("highlight");
+map.flyTo([baseLat,baseLng],12);
+marker.openPopup();
+};
+
+grid.appendChild(card);
+}
+
+cityContainer.appendChild(cityTitle);
+cityContainer.appendChild(grid);
+});
+
+sidebar.appendChild(countryDiv);
+sidebar.appendChild(cityContainer);
+});
+
+// LOAD PG DATA FROM BACKEND API
+async function loadPGsFromBackend(){
+
+try{
+
+const response = await fetch("http://localhost:3000/pgs");
+const pgs = await response.json();
+
+pgs.forEach(pg=>{
+
+let marker=L.marker([pg.lat,pg.lng]).addTo(map);
+
+marker.bindPopup(
+`<b>${pg.name}</b><br>
+${pg.city}, ${pg.country}<br>
+<b style="color:#FFC107;">₹ ${pg.price} / month</b>`
+);
+
+});
+
+}catch(error){
+console.log("Backend connection error:",error);
+}
+
+}
+
+loadPGsFromBackend();
+</script>
+
+</body>
+</html>
