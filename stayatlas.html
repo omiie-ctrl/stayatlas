@@ -685,7 +685,7 @@ async function loadPGsFromBackend(){
 
 try{
 
-const response = await fetch("http://localhost:3000/pgs");
+const response = await fetch("http://stayatlas-1.onrender.com/pgs");
 const pgs = await response.json();
 
 pgs.forEach(pg=>{
